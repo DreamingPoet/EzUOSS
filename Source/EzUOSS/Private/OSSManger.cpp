@@ -1,21 +1,21 @@
-#include "OSSManger.h"
+ï»¿#include "OSSManger.h"
 #include "EzUOSS.h"
-
+#include "OSSRequest.h"
 
 
 
 void put_object(const oss_options* options, char* key, uint64_t content_length, oss_put_properties* put_properties, server_side_encryption_params* encryption_params, oss_put_object_handler* handler, void* callback_data)
 {
 
-	// ÇëÇó²ÎÊý
+	// è¯·æ±‚å‚æ•°
 	request_params params;
 	UE_LOG(LogOSS, Log, TEXT("Enter put_object successfully !"));
-	oss_use_api use_api = oss_USE_API_S3;
-	set_use_api_switch(options, &use_api);
+	oss_use_api use_api = OSS_USE_API_S3;
+	OSSRequest::set_use_api_switch(options, &use_api);
 
 	if (!options->bucket_options.bucket_name) {
 		UE_LOG(LogOSS, Log, TEXT("bucket_name is NULL!"));
-		(void)(*(handler->response_handler.complete_callback))(oss_STATUS_InvalidBucketName, 0, callback_data);
+		(void)(*(handler->response_handler.complete_callback))(OSS_STATUS_InvalidBucketName, 0, callback_data);
 		return;
 	}
 
