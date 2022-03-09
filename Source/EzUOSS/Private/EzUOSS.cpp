@@ -6,6 +6,8 @@
 
 #define LOCTEXT_NAMESPACE "FEzUOSSModule"
 
+DEFINE_LOG_CATEGORY(LogOSS);
+
 void FEzUOSSModule::StartupModule()
 {
 	// This code will execute after your module is loaded into memory; the exact timing is specified in the .uplugin file per-module
