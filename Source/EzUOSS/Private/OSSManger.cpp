@@ -1,32 +1,29 @@
 ﻿#include "OSSManger.h"
 #include "EzUOSS.h"
 #include "OSSRequest.h"
+#include "OSSLog.h"
 
 
 
-void put_object(const oss_options* options, char* key, uint64_t content_length, oss_put_properties* put_properties, server_side_encryption_params* encryption_params, oss_put_object_handler* handler, void* callback_data)
+void OSSManager::put_object(const obs_options* options, char* key, uint64 content_length, obs_put_properties* put_properties, server_side_encryption_params* encryption_params, obs_put_object_handler* handler, void* callback_data)
 {
 
 	// 请求参数
 	request_params params;
 	UE_LOG(LogOSS, Log, TEXT("Enter put_object successfully !"));
-	oss_use_api use_api = OSS_USE_API_S3;
+	obs_use_api use_api = OBS_USE_API_S3;
 	OSSRequest::set_use_api_switch(options, &use_api);
 
 	if (!options->bucket_options.bucket_name) {
 		UE_LOG(LogOSS, Log, TEXT("bucket_name is NULL!"));
-		(void)(*(handler->response_handler.complete_callback))(OSS_STATUS_InvalidBucketName, 0, callback_data);
+		(void)(*(handler->response_handler.complete_callback))(OBS_STATUS_InvalidBucketName, 0, callback_data);
 		return;
 	}
+	FMemory::Memset(&params, 0, sizeof(request_params));
 
-	memset_s(&params, sizeof(request_params), 0, sizeof(request_params));
-	errno_t err = EOK;
-	err = memcpy_s(&params.bucketContext, sizeof(oss_bucket_context), &options->bucket_options,
-		sizeof(oss_bucket_context));
-	CheckAndLogNoneZero(err, "memcpy_s", __FUNCTION__, __LINE__);
-	err = memcpy_s(&params.request_option, sizeof(oss_http_request_option), &options->request_options,
-		sizeof(oss_http_request_option));
-	CheckAndLogNoneZero(err, "memcpy_s", __FUNCTION__, __LINE__);
+	FMemory::Memcpy(&params.bucketContext, &options->bucket_options, sizeof(obs_bucket_context));
+
+	FMemory::Memcpy(&params.request_option, &options->request_options, sizeof(obs_http_request_option));
 
 	params.temp_auth = options->temp_auth;
 	params.httpRequestType = http_request_type_put;
@@ -42,6 +39,7 @@ void put_object(const oss_options* options, char* key, uint64_t content_length, 
 	params.storageClassFormat = storage_class;
 	params.use_api = use_api;
 
-	request_perform(&params);
+	OSSRequest Request;
+	Request.request_perform(&params);
 	UE_LOG(LogOSS, Log, TEXT("Leave put_object successfully !"));
 }

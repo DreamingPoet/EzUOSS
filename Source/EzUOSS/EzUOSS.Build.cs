@@ -38,7 +38,7 @@ public class EzUOSS : ModuleRules
 	{
 		PCHUsage = ModuleRules.PCHUsageMode.UseExplicitOrSharedPCHs;
 		
-		PublicDefinitions.Add("HTTP_PACKAGE=1");
+		PublicDefinitions.Add("OBS_PACKAGE=1");
 
 		PrivateIncludePaths.AddRange(
 			new string[] {
