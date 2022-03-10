@@ -1,11 +1,11 @@
 ﻿// Copyright Epic Games, Inc. All Rights Reserved.
 
 #pragma once
-
+/*
 #include "CoreMinimal.h"
 #include "OSSType.h"
 #include "OSSPackage.h"
-#include "HAL/PlatformAtomics.h"
+// #include "HAL/PlatformAtomics.h"
 // #include "HAL/PlatformMisc.h"
 #include "curl/curl.h"
 #include "util.h"
@@ -88,11 +88,6 @@
 // ======================== request_util end ==========
 
 // ======================== util start ==========
-
-int is_blank(char c)
-{
-	return ((c == ' ') || (c == '\t'));
-}
 
 int urlEncode(char* dest, const char* src, int maxSrcSize, char ignoreChar)
 {
@@ -278,8 +273,10 @@ public:
 
 PACKAGE_SCOPE:
 
-	/** Used to lock access to add/remove/find requests */
+	// Used to lock access to add/remove/find requests
 	static FCriticalSection RequestLock;
 
 
 };
+
+*/

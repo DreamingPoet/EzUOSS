@@ -2,6 +2,7 @@
 #include "EzUOSS.h"
 #include "OSSLog.h"
 
+/*
 #define BUCKET_LEN 65
 #define DOMAIN_LEN 254
 
@@ -205,7 +206,7 @@ const char* http_request_type_to_verb(http_request_type requestType)
 CURLcode sslctx_function(CURL* curl, const void* sslctx, void* parm)
 {
 // TODO::
-/*
+
 // 	(void)curl;
 // 
 // 	X509_STORE* store = NULL;
@@ -220,7 +221,7 @@ CURLcode sslctx_function(CURL* curl, const void* sslctx, void* parm)
 // 	X509_STORE_add_cert(store, cert);
 // 	X509_free(cert);
 // 	BIO_free(bio);
-*/
+
 	return CURLE_OK;
 }
 
@@ -532,10 +533,10 @@ static obs_status setup_curl(http_request* request,
 		curl_easy_setopt_safe(CURLOPT_SOCKOPTFUNCTION, sockopt_callback);
 		curl_easy_setopt_safe(CURLOPT_SOCKOPTDATA, &recvbuffersize);
 	}
-	/*if( params->request_option.http2_switch == OBS_HTTP2_OPEN )
-	{
-		curl_easy_setopt_safe(CURLOPT_HTTP_VERSION ,CURL_HTTP_VERSION_2_PRIOR_KNOWLEDGE);
-	}*/
+// 	if( params->request_option.http2_switch == OBS_HTTP2_OPEN )
+// 	{
+// 		curl_easy_setopt_safe(CURLOPT_HTTP_VERSION ,CURL_HTTP_VERSION_2_PRIOR_KNOWLEDGE);
+// 	}
 
 	curl_easy_setopt_safe(CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
 	return set_curl_easy_setopt_safe(request, params);
@@ -1066,39 +1067,39 @@ obs_status request_compose_encrypt_params_s3(request_computed_values* values, co
 			char ssec_key_md5[SSEC_KEY_MD5_LENGTH] = { 0 };
 
 
-			/**
-			 * Decodes a Base64 string into a FString
-			 *
-			 * @param Source The Base64 encoded string
-			 * @param OutDest Receives the decoded string data
-
-			static bool Decode(const FString & Source, FString & OutDest);
-
-
-			 * Decodes a Base64 string into an array of bytes
-			 *
-			 * @param Source The Base64 encoded string
-			 * @param Dest Array to receive the decoded data
-
-			static bool Decode(const FString & Source, TArray<uint8>&Dest);
-
-
-			 * Decodes a Base64 string into a preallocated buffer
-			 *
-			 * @param Source The Base64 encoded string
-			 * @param Length Length of the Base64 encoded string
-			 * @param Dest Buffer to receive the decoded data
-			 *
-			 * @return true if the buffer was decoded, false if it was invalid.
-
-			template<typename CharType> static bool Decode(const CharType * Source, uint32 Length, uint8 * Dest);
-
-			char* base64Decode(const char* base64Char, const long base64CharSize, char* originChar, long originCharSize);
-
-			base64Decode(params->encryption_params->ssec_customer_key,
-				strlen(params->encryption_params->ssec_customer_key), buffer, SSEC_KEY_MD5_LENGTH);
-			compute_md5(buffer, strlen(buffer), ssec_key_md5, SSEC_KEY_MD5_LENGTH);
-			*/
+			
+// 			 * Decodes a Base64 string into a FString
+// 			 *
+// 			 * @param Source The Base64 encoded string
+// 			 * @param OutDest Receives the decoded string data
+// 
+// 			static bool Decode(const FString & Source, FString & OutDest);
+// 
+// 
+// 			 * Decodes a Base64 string into an array of bytes
+// 			 *
+// 			 * @param Source The Base64 encoded string
+// 			 * @param Dest Array to receive the decoded data
+// 
+// 			static bool Decode(const FString & Source, TArray<uint8>&Dest);
+// 
+// 
+// 			 * Decodes a Base64 string into a preallocated buffer
+// 			 *
+// 			 * @param Source The Base64 encoded string
+// 			 * @param Length Length of the Base64 encoded string
+// 			 * @param Dest Buffer to receive the decoded data
+// 			 *
+// 			 * @return true if the buffer was decoded, false if it was invalid.
+// 
+// 			template<typename CharType> static bool Decode(const CharType * Source, uint32 Length, uint8 * Dest);
+// 
+// 			char* base64Decode(const char* base64Char, const long base64CharSize, char* originChar, long originCharSize);
+// 
+// 			base64Decode(params->encryption_params->ssec_customer_key,
+// 				strlen(params->encryption_params->ssec_customer_key), buffer, SSEC_KEY_MD5_LENGTH);
+// 			compute_md5(buffer, strlen(buffer), ssec_key_md5, SSEC_KEY_MD5_LENGTH);
+// 			
 			if ((status = headers_append(len, values, 1,
 				"x-amz-server-side-encryption-customer-key-md5: %s",
 				ssec_key_md5, NULL)) != OBS_STATUS_OK) {
@@ -1121,14 +1122,14 @@ obs_status request_compose_encrypt_params_s3(request_computed_values* values, co
 			char buffer[SSEC_KEY_MD5_LENGTH] = { 0 };
 			char ssec_key_md5[SSEC_KEY_MD5_LENGTH] = { 0 };
 			// TODO::
-			/*
-			base64Decode(params->encryption_params->ssec_customer_key,
-				strlen(params->encryption_params->ssec_customer_key), buffer, SSEC_KEY_MD5_LENGTH);
-			compute_md5(buffer, strlen(buffer), ssec_key_md5, SSEC_KEY_MD5_LENGTH);
-			status = headers_append(len, values, 1,
-				"x-amz-copy-source-server-side-encryption-customer-key-md5: %s",
-				ssec_key_md5, NULL);
-				*/
+			
+// 			base64Decode(params->encryption_params->ssec_customer_key,
+// 				strlen(params->encryption_params->ssec_customer_key), buffer, SSEC_KEY_MD5_LENGTH);
+// 			compute_md5(buffer, strlen(buffer), ssec_key_md5, SSEC_KEY_MD5_LENGTH);
+// 			status = headers_append(len, values, 1,
+// 				"x-amz-copy-source-server-side-encryption-customer-key-md5: %s",
+// 				ssec_key_md5, NULL);
+				
 		}
 	}
 	return status;
@@ -1172,16 +1173,16 @@ obs_status request_compose_encrypt_params_obs(request_computed_values* values, c
 			char buffer[SSEC_KEY_MD5_LENGTH] = { 0 };
 			char ssec_key_md5[SSEC_KEY_MD5_LENGTH] = { 0 };
 			// TODO::
-			/*
-			base64Decode(params->encryption_params->ssec_customer_key,
-				strlen(params->encryption_params->ssec_customer_key), buffer, SSEC_KEY_MD5_LENGTH);
-			compute_md5(buffer, strlen(buffer), ssec_key_md5, SSEC_KEY_MD5_LENGTH);
-			if ((status = headers_append(len, values, 1,
-				"x-obs-server-side-encryption-customer-key-md5: %s",
-				ssec_key_md5, NULL)) != OBS_STATUS_OK) {
-				return status;
-			}
-			*/
+	
+// 			base64Decode(params->encryption_params->ssec_customer_key,
+// 				strlen(params->encryption_params->ssec_customer_key), buffer, SSEC_KEY_MD5_LENGTH);
+// 			compute_md5(buffer, strlen(buffer), ssec_key_md5, SSEC_KEY_MD5_LENGTH);
+// 			if ((status = headers_append(len, values, 1,
+// 				"x-obs-server-side-encryption-customer-key-md5: %s",
+// 				ssec_key_md5, NULL)) != OBS_STATUS_OK) {
+// 				return status;
+// 			}
+		
 		}
 		if (params->encryption_params->des_ssec_customer_algorithm)
 			if ((status = headers_append(len, values, 1,
@@ -1200,14 +1201,14 @@ obs_status request_compose_encrypt_params_obs(request_computed_values* values, c
 			char ssec_key_md5[SSEC_KEY_MD5_LENGTH] = { 0 };
 			//	TODO::
 
-/*
+
 // 			base64Decode(params->encryption_params->ssec_customer_key,
 // 				strlen(params->encryption_params->ssec_customer_key), buffer, SSEC_KEY_MD5_LENGTH);
 // 			compute_md5(buffer, strlen(buffer), ssec_key_md5, SSEC_KEY_MD5_LENGTH);
 // 			status = headers_append(len, values, 1,
 // 				"x-obs-copy-source-server-side-encryption-customer-key-md5: %s",
 // 				ssec_key_md5, NULL);
-*/
+
 		}
 	}
 	return status;
@@ -2014,11 +2015,11 @@ obs_status compose_temp_header(const request_params* params,
 	}
 	unsigned char hmac[20] = { 0 };
 	// TODO::
-	/*
-	HMAC_SHA1(hmac, (unsigned char*)params->bucketContext.secret_access_key,
-		strlen(params->bucketContext.secret_access_key),
-		(unsigned char*)signbuf, len);
-	*/
+
+// 	HMAC_SHA1(hmac, (unsigned char*)params->bucketContext.secret_access_key,
+// 		strlen(params->bucketContext.secret_access_key),
+// 		(unsigned char*)signbuf, len);
+
 	char b64[((20 + 1) * 4) / 3] = { 0 };
 	// (void)base64Encode(hmac, 20, b64);
 	char cUrlEncode[512] = { 0 };
@@ -2596,12 +2597,12 @@ obs_status OSSRequest::get_api_version(char* bucket_name, char* host_name, obs_p
 }
 
 
-/*
-** encode_key 对object_key做encode
-** 目前的特别处理逻辑为：默认不对/字符encode(分享的时候m3u8需要依赖目录结构)，
-** 但是有./的还是需要encode，原因在于./在libcurl去request的时候会被自动去掉，
-** 从而会导致sdk计算的CanonicalizedResource和服务端计算的不一致，最终会签名不匹配
-**/
+// 
+// ** encode_key 对object_key做encode
+// ** 目前的特别处理逻辑为：默认不对/字符encode(分享的时候m3u8需要依赖目录结构)，
+// ** 但是有./的还是需要encode，原因在于./在libcurl去request的时候会被自动去掉，
+// ** 从而会导致sdk计算的CanonicalizedResource和服务端计算的不一致，最终会签名不匹配
+// 
 obs_status OSSRequest::encode_key(const char* params, char* values)
 {
 	char ingoreChar = '/';
@@ -2623,3 +2624,5 @@ obs_status OSSRequest::encode_key(const char* params, char* values)
 		return (nRet ? OBS_STATUS_OK : OBS_STATUS_UriTooLong);
 	}
 }
+
+*/

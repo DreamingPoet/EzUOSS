@@ -23,12 +23,11 @@
  *
  ************************************************************************** **/
 
-#ifndef UTIL_H
-#define UTIL_H
+#pragma once
 
 #include <curl/curl.h>
 #include <curl/multi.h>
-#include <stdint.h>
+// #include <stdint.h>
 
 //#define vsnprintf_sec vsnprintf_s
 //#define snprintf_sec snprintf_s
@@ -46,16 +45,16 @@
 
 #define WCHAR_SIZE sizeof(wchar_t)
 
-/* define the max length of the string */
+// define the max length of the string
 #define SECUREC_STRING_MAX_LEN (0x7fffffffUL)
 #define SECUREC_WCHAR_STRING_MAX_LEN (SECUREC_STRING_MAX_LEN / WCHAR_SIZE)
 
-/* add SECUREC_MEM_MAX_LEN for memcpy and memmove*/
+// add SECUREC_MEM_MAX_LEN for memcpy and memmove
 #define SECUREC_MEM_MAX_LEN (0x7fffffffUL)
 #define SECUREC_WCHAR_MEM_MAX_LEN (SECUREC_MEM_MAX_LEN / WCHAR_SIZE)
 //================ securectype end =============
 
-/* _TRUNCATE */
+// _TRUNCATE 
 #ifdef _TRUNCATE
     #undef _TRUNCATE
 #endif
@@ -107,6 +106,12 @@ enum eFormalizeChoice
    NEED_FORMALIZE   
 };
 
+int is_blank(char c)
+{
+	return ((c == ' ') || (c == '\t'));
+}
+
+
 /*
 int urlEncode(char *dest, const char *src, int maxSrcSize, char ignoreChar);
     
@@ -148,8 +153,5 @@ int add_xml_element(char * buffOut, int * lenth,const char * elementName, const 
 int add_xml_element_in_bufflen(char * buffOut, int * lenth,const char * elementName, const char * content, 
         eFormalizeChoice needFormalize, xmlAddType addType, int buff_len);
 
+
 */
-
-#endif /* UTIL_H */
-
-

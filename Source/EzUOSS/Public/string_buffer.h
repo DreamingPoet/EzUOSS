@@ -12,10 +12,10 @@
 * specific language governing permissions and limitations under the License.
 **********************************************************************************
 */
-#ifndef STRING_BUFFER_H
-#define STRING_BUFFER_H
 
-#include <stdio.h>
+#pragma once
+
+// #include <stdio.h>
 // #include "securec.h"
 // #include "log.h"
 
@@ -103,7 +103,7 @@
         }                                                                   \
     }while (0)
 
-#endif /* STRING_BUFFER_H */
+
 
 #define safe_append_with_interface_log(name, value, complete_callback)\
     do {\
@@ -169,4 +169,3 @@
             return OBS_STATUS_QueryParamsTooLong;\
         }\
     } while (0)
-

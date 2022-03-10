@@ -23,8 +23,8 @@
  *
  ************************************************************************** **/
 
-#ifndef ERROR_PARSER_H
-#define ERROR_PARSER_H
+ /*
+#pragma once
 
 #include "OSSType.h"
 // #include "simplexml.h"
@@ -65,6 +65,4 @@ void error_parser_convert_status(error_parser *errorParser, obs_status *status);
 
 // Always call this
 void error_parser_deinitialize(error_parser *errorParser);
-
-
-#endif /* ERROR_PARSER_H */
+*/

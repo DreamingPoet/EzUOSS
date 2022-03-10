@@ -5,12 +5,12 @@
 #include "CoreMinimal.h"
 #include <string.h>
 
-/*define error code*/
+// define error code
 #ifndef errno_t
 typedef int errno_t;
 #endif
 
-/* success */
+// success 
 #define EOK (0)
 
 
@@ -162,9 +162,9 @@ enum obs_encryption_type
 
 enum obs_storage_class
 {
-	OBS_STORAGE_CLASS_STANDARD = 0, /* STANDARD */
-	OBS_STORAGE_CLASS_STANDARD_IA = 1, /* STANDARD_IA */
-	OBS_STORAGE_CLASS_GLACIER = 2, /* GLACIER */
+	OBS_STORAGE_CLASS_STANDARD = 0, // STANDARD //
+	OBS_STORAGE_CLASS_STANDARD_IA = 1, // STANDARD_IA //
+	OBS_STORAGE_CLASS_GLACIER = 2, // GLACIER //
 	OBS_STORAGE_CLASS_BUTT
 };
 
@@ -228,9 +228,9 @@ enum obs_status
 	OBS_STATUS_OpenFileFailed,
 	OBS_STATUS_EmptyFile,
 
-	/**
-	* Errors from the obs_ service
-	**/
+
+	// ==== Errors from the obs_ service
+
 	OBS_STATUS_AccessDenied,
 	OBS_STATUS_AccountProblem,
 	OBS_STATUS_AmbiguousGrantByEmailAddress,
@@ -316,10 +316,10 @@ enum obs_status
 	OBS_STATUS_InArrearOrInsufficientBalance,
 	OBS_STATUS_NoSuchTagSet,
 	OBS_STATUS_ErrorUnknown,
-	/*
-	* The following are HTTP errors returned by obs_ without enough detail to
-	* distinguish any of the above OBS_STATUS_error conditions
-	*/
+	//
+	// The following are HTTP errors returned by obs_ without enough detail to
+	// distinguish any of the above OBS_STATUS_error conditions
+	//
 	OBS_STATUS_HttpErrorMovedTemporarily,
 	OBS_STATUS_HttpErrorBadRequest,
 	OBS_STATUS_HttpErrorForbidden,
@@ -327,14 +327,14 @@ enum obs_status
 	OBS_STATUS_HttpErrorConflict,
 	OBS_STATUS_HttpErrorUnknown,
 
-	/*
-	* posix new add errors
-	*/
+	//
+	// posix new add errors
+	//
 	OBS_STATUS_QuotaTooSmall,
 
-	/*
-	* obs_-meta errors
-	*/
+	//
+	// obs_-meta errors
+	//
 	OBS_STATUS_MetadataNameDuplicate,
 
 
@@ -424,7 +424,7 @@ struct server_side_encryption_params
 };
 
 
-/**************************return struct*******************************************/
+//-*************************return struct******************************************-//
 struct obs_bucket_context
 {
 	char* host_name;
@@ -560,7 +560,7 @@ struct obs_error_details
 };
 
 
-/***************************response handle function*******************************************/
+//-**************************response handle function******************************************-//
 typedef obs_status(obs_response_properties_callback)(const obs_response_properties* properties,void* callback_data);
 typedef int (obs_put_object_data_callback)(int buffer_size, char* buffer, void* callback_data);
 typedef int (obs_append_object_data_callback)(int buffer_size, char* buffer, void* callback_data);
@@ -569,7 +569,7 @@ typedef obs_status(obs_get_object_data_callback)(int buffer_size, const char* bu
 typedef void (obs_response_complete_callback)(obs_status status, const obs_error_details* error_details, void* callback_data);
 
 
-/**************************response handler struct**********************************************/
+// -*************************response handler struct*********************************************- //
 struct obs_response_handler
 {
 	obs_response_properties_callback* properties_callback;
@@ -632,3 +632,4 @@ struct request_params
 	obs_use_api use_api;
 
 };
+

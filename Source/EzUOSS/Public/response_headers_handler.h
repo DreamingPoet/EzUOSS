@@ -12,32 +12,45 @@
 * specific language governing permissions and limitations under the License.
 **********************************************************************************
 */
+
 #pragma once
-#include "curl/curl.h"
-#include "string_buffer.h"
-#include "util.h"
 #include "OSSType.h"
+#include "string_buffer.h"
+
+#if WITH_LIBCURL
+#if PLATFORM_WINDOWS || PLATFORM_HOLOLENS
+#include "Windows/WindowsHWrapper.h"
+#include "Windows/AllowWindowsPlatformTypes.h"
+#endif
+#include "curl/curl.h"
+#if PLATFORM_WINDOWS || PLATFORM_HOLOLENS
+#include "Windows/HideWindowsPlatformTypes.h"
+#endif
+
+#include "util.h"
+
 
 struct response_headers_handler
 {
    
-    obs_response_properties responseProperties;
+    // obs_response_properties responseProperties;
 
-    int done;
+    // int done;
 
-    string_multibuffer(responsePropertyStrings, 5 * 129);
+    //string_multibuffer(responsePropertyStrings, 5 * 129);
 
-    string_multibuffer(responseMetaDataStrings, COMPACTED_METADATA_BUFFER_SIZE);
+    //string_multibuffer(responseMetaDataStrings, COMPACTED_METADATA_BUFFER_SIZE);
 
-    obs_name_value responseMetaData[OBS_MAX_METADATA_COUNT];
-
-	static void response_headers_handler_initialize(response_headers_handler* handler);
-
-	static void response_headers_handler_add(response_headers_handler* handler,
-		char* data, int dataLen);
-
-	static void response_headers_handler_done(response_headers_handler* handler,
-		CURL* curl);
+    // obs_name_value responseMetaData[OBS_MAX_METADATA_COUNT];
 
 };
+//
+//void response_headers_handler_initialize(response_headers_handler* handler);
+//
+//void response_headers_handler_add(response_headers_handler* handler,
+//		char* data, int dataLen);
+//
+//void response_headers_handler_done(response_headers_handler* handler,
+//		CURL* curl);
 
+#endif //WITH_LIBCURL

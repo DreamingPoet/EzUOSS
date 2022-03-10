@@ -13,19 +13,20 @@ enum OBS_LOGLEVEL
 };
 
 
-class OSSLog {
+class OSSLog
+{
 
-public:
-	static void CheckAndLogNoneZero(int ret, const char* name, const char* funcName, unsigned long line) {
-		if (ret != 0) {
-			UE_LOG(LogOSS, Warning, TEXT("%s failed in %s.(%ld)"), name, funcName, line);
-		}
-	}
-
-	static void CheckAndLogNeg(int ret, const char* name, const char* funcName, unsigned long line) {
-		if (ret < 0) {
-			UE_LOG(LogOSS, Warning, TEXT("%s failed in %s.(%ld)"), name, funcName, line);
-		}
-	}
+// public:
+// 	static void CheckAndLogNoneZero(int ret, const char* name, const char* funcName, unsigned long line) {
+// 		if (ret != 0) {
+// 			UE_LOG(LogOSS, Warning, TEXT("%s failed in %s.(%ld)"), name, funcName, line);
+// 		}
+// 	}
+// 
+// 	static void CheckAndLogNeg(int ret, const char* name, const char* funcName, unsigned long line) {
+// 		if (ret < 0) {
+// 			UE_LOG(LogOSS, Warning, TEXT("%s failed in %s.(%ld)"), name, funcName, line);
+// 		}
+// 	}
 
 };

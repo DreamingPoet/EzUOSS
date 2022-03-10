@@ -1,8 +1,8 @@
 ﻿// Copyright Epic Games, Inc. All Rights Reserved.
 
 #include "EzUOSS.h"
-#include "HttpModule.h"
-#include "Interfaces/IHttpRequest.h"
+//#include "HttpModule.h"
+//#include "Interfaces/IHttpRequest.h"
 
 #define LOCTEXT_NAMESPACE "FEzUOSSModule"
 
