@@ -3,19 +3,19 @@
 * Licensed under the Apache License, Version 2.0 (the "License"); you may not use
 * this file except in compliance with the License.  You may obtain a copy of the
 * License at
-* 
+*
 * http://www.apache.org/licenses/LICENSE-2.0
-* 
+*
 * Unless required by applicable law or agreed to in writing, software distributed
 * under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
 * CONDITIONS OF ANY KIND, either express or implied.  See the License for the
 * specific language governing permissions and limitations under the License.
 **********************************************************************************
 */
+#ifndef STRING_BUFFER_H
+#define STRING_BUFFER_H
 
-#pragma once
-
-// #include <stdio.h>
+#include <stdio.h>
 // #include "securec.h"
 // #include "log.h"
 
@@ -93,17 +93,17 @@
         sb = (char*) malloc(len + 1);                                   \
         if (NULL == sb)                                                 \
         {                                                               \
-            COMMLOG(OBS_LOGERROR, "malloc sb failed.");                \
+            UE_LOG(LogTemp, Log, TEXT("malloc sb failed."));               \
             return OBS_STATUS_OutOfMemory;                            \
         }                                                               \
         memset_s(sb, len+1, 0, len+1);                                  \
         int l = snprintf_s(sb, len+1, len, "%.*s", (int)len, str);              \
         if (l < 0) {                                                      \
-            COMMLOG(OBS_LOGWARN, "snprintf_s failed.");                      \
+            UE_LOG(LogTemp, Log, TEXT("snprintf_s failed."));                      \
         }                                                                   \
     }while (0)
 
-
+#endif /* STRING_BUFFER_H */
 
 #define safe_append_with_interface_log(name, value, complete_callback)\
     do {\
@@ -169,3 +169,4 @@
             return OBS_STATUS_QueryParamsTooLong;\
         }\
     } while (0)
+

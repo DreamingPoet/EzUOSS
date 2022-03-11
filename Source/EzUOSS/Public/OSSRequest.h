@@ -1,17 +1,46 @@
-﻿// Copyright Epic Games, Inc. All Rights Reserved.
+﻿/** **************************************************************************
+ *
+ * Copyright 2008 Bryan Ischo <bryan@ischo.com>
+ *
+ * This file is part of libs3.
+ *
+ * libs3 is free software: you can redistribute it and/or modify it under the
+ * terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation, version 3 of the License.
+ *
+ * In addition, as a special exception, the copyright holders give
+ * permission to link the code of this library and its programs with the
+ * OpenSSL library, and distribute linked combinations including the two.
+ *
+ * libs3 is distributed in the hope that it will be useful, but WITHOUT ANY
+ * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * version 3 along with libs3, in a file named COPYING.  If not, see
+ * <http://www.gnu.org/licenses/>.
+ *
+ ************************************************************************** **/
+#ifndef REQUEST_H
+#define REQUEST_H
 
-#pragma once
-/*
-#include "CoreMinimal.h"
-#include "OSSType.h"
-#include "OSSPackage.h"
-// #include "HAL/PlatformAtomics.h"
-// #include "HAL/PlatformMisc.h"
-#include "curl/curl.h"
-#include "util.h"
-#include "string_buffer.h"
-#include "response_headers_handler.h"
+#include "OSSManger.h"
 #include "error_parser.h"
+#include "response_headers_handler.h"
+#include "util.h"
+#include "OSSType.h"
+// #include "log.h"
+// #include "common.h"
+
+
+#ifdef WIN32
+#define LIBOBS_VER_MAJOR "3.21"
+#define LIBOBS_VER_MINOR "8"
+#endif
+
+#if defined __GNUC__ || defined LINUX
+#endif
 
 #define HEAD_NORMAL_LEN 128
 #define HEAD_WEBSITE_LEN 2200
@@ -45,7 +74,7 @@
 #define curl_easy_setopt_safe(opt, val)                                 \
                 if ((status = curl_easy_setopt                                      \
                      (request->curl, opt, val)) != CURLE_OK) {                      \
-                    UE_LOG(LogOSS, Warning, TEXT("curl_easy_setopt_safe failed, status: %d"),status);  \
+                    UE_LOG(LogTemp, Log, TEXT("curl_easy_setopt_safe failed, status: %d"), status);    \
                     return OBS_STATUS_FailedToIInitializeRequest;                       \
                 }
 
@@ -59,224 +88,186 @@
 
 #define return_status(status)                                           \
     (*(params->complete_callback))(status, 0, params->callback_data);     \
-	UE_LOG(LogOSS, Warning, TEXT("%s status = %d"), __FUNCTION__,status);\
+    UE_LOG(LogTemp, Log, TEXT("%s status = %d"), __FUNCTION__,status);\
     return
 
 
-#define return_status(status)                                           \
-    (*(params->complete_callback))(status, 0, params->callback_data);     \
-    UE_LOG(LogOSS, Warning, TEXT("%s status = %d"), __FUNCTION__,status);\
-    return
-
-// ======================== request_util start ==========
-
-#define SSEC_KEY_MD5_LENGTH 64
-
-#define signbuf_attach(format, ...)                             \
-        do{\
-            int lenAdded = snprintf_s(&(signbuf[len]), sizeof(signbuf) - len,_TRUNCATE,format, __VA_ARGS__);\
-            if (lenAdded > 0)  \
-            {\
-                len += lenAdded;\
-            }else\
-            {\
-				UE_LOG(LogOSS, Error, TEXT("attch string failed in compose_authV2_temp_header, lenAdded is[%d]"),lenAdded);\
-            }\
-        }while(0)
-
-
-// ======================== request_util end ==========
-
-// ======================== util start ==========
-
-int urlEncode(char* dest, const char* src, int maxSrcSize, char ignoreChar)
+typedef enum
 {
-	if (dest == NULL) {
-		// COMMLOG(OBS_LOGERROR, "dest for urlEncode is NULL.");
-		return -1;
-	}
-	if (src == NULL) {
-		// COMMLOG(OBS_LOGWARN, "src for urlEncode is NULL.");
-		*dest = 0;
-		return 1;
-	}
-	int len = 0;
-	while (*src) {
-		if (++len > maxSrcSize) {
-			*dest = 0;
-			return 0;
-		}
-		unsigned char c = *src;
-		if (isalnum(c) || (c == '.') || (c == '-')
-			|| (c == '_') || (c == '~')
-			|| (c == ignoreChar))
-		{
-			*dest++ = c;
-		}
-		else {
-			*dest++ = '%';
-			*dest++ = "0123456789ABCDEF"[c >> 4];
-			*dest++ = "0123456789ABCDEF"[c & 15];
-		}
-		++src;
-	}
+    http_request_type_get,
+    http_request_type_head,
+    http_request_type_put,
+    http_request_type_copy,
+    http_request_type_delete,
+    http_request_type_post,
+    http_request_type_options
+} http_request_type;
 
-	*dest = 0;
-	return 1;
-}
-
-int urlDecode(char* dest, const char* src, int maxSrcSize)
+typedef enum
 {
-	int len = 0;
-	char strOne[4] = { 0 };
-	int charGot = 0;
+    no_need_storage_class,
+    default_storage_class,
+    storage_class
+}obs_storage_class_format;
 
-	if (src) while (*src) {
-		if (++len > maxSrcSize) {
-			*dest = 0;
-			return 0;
-		}
-		unsigned char c = *src;
-		if (c == '%') {
-			src++;
 
-			FMemory::Memmove(strOne, src, 2);
-			errno_t err = 0;
-			if (err != EOK)
-			{
-				// COMMLOG(OBS_LOGWARN, "%s(%d): memmove_s failed!(%d)", __FUNCTION__, __LINE__, err);
-			}
-			int ret = sscanf_s(strOne, "%02x", &charGot);
-			if (ret != 1) {
-				// COMMLOG(OBS_LOGWARN, "%s(%d): sscanf_s failed!(%d)", __FUNCTION__, __LINE__);
-			}
-			FMemory::Memset(strOne, 0, 4);
-			src++;
-
-			*dest++ = (char)charGot;
-		}
-		else
-		{
-			*dest++ = c;
-		}
-		src++;
-	}
-
-	*dest = 0;
-
-	return 1;
-}
-
-// ======================== util end ==========
-
-struct request_computed_values
+typedef struct http_request
 {
-	char* amzHeaders[OBS_MAX_METADATA_COUNT + 3];
+    struct http_request* prev, * next;
+    obs_status status;
+    int httpResponseCode;
+    struct curl_slist* headers;
+    CURL* curl;
+    char uri[MAX_URI_SIZE + 1];
+    obs_response_properties_callback* properties_callback;
+    obs_put_object_data_callback* toS3Callback;
+    int64_t toS3CallbackBytesRemaining;
+    obs_get_object_data_callback* fromS3Callback;
+    obs_response_complete_callback* complete_callback;
+    void* callback_data;
+    response_headers_handler responseHeadersHandler;
+    int propertiesCallbackMade;
+    error_parser errorParser;
+} http_request;
 
-	int amzHeadersCount;
-
-	char amzHeadersRaw[30000 + COMPACTED_METADATA_BUFFER_SIZE + 256 + 1];
-
-	string_multibuffer(canonicalizedAmzHeaders,
-		COMPACTED_METADATA_BUFFER_SIZE + 30000 + 256 + 1);
-
-	char urlEncodedKey[MAX_URLENCODED_KEY_SIZE + 1];
-
-	char urlEncodedSrcKey[MAX_URLENCODED_KEY_SIZE + 1];
-
-	char canonicalizedResource[MAX_CANONICALIZED_RESOURCE_SIZE + 1];
-
-	char cacheControlHeader[HEAD_NORMAL_LEN];
-
-	char contentTypeHeader[HEAD_NORMAL_LEN];
-
-	char md5Header[HEAD_NORMAL_LEN];
-
-	char contentDispositionHeader[HEAD_NORMAL_LEN];
-
-	char contentEncodingHeader[HEAD_NORMAL_LEN];
-
-	char websiteredirectlocationHeader[HEAD_WEBSITE_LEN];
-
-	char expiresHeader[HEAD_NORMAL_LEN];
-
-	char ifModifiedSinceHeader[HEAD_NORMAL_LEN];
-
-	char ifUnmodifiedSinceHeader[HEAD_NORMAL_LEN];
-
-	char ifMatchHeader[HEAD_NORMAL_LEN];
-
-	char ifNoneMatchHeader[HEAD_NORMAL_LEN];
-
-	char rangeHeader[HEAD_NORMAL_LEN];
-
-	char authorizationHeader[HEAD_AUTH_LEN];
-
-	char tokenHeader[HEAD_AUTH_LEN];
-
-	char userAgent[HEAD_NORMAL_LEN];
-
-};
-
-struct temp_auth_info
+typedef struct obs_cors_conf
 {
-	char* tempAuthParams;
-	char* temp_auth_headers;
-};
+    char* origin;
+    char* requestMethod[100];
+    unsigned int rmNumber;
+    char* requestHeader[100];
+    unsigned int rhNumber;
+}obs_cors_conf;
 
-struct http_request
+typedef struct request_params
 {
-	struct http_request* prev, * next;
-	obs_status status;
-	int httpResponseCode;
-	struct curl_slist* headers;
-	CURL* curl;
-	char uri[MAX_URI_SIZE + 1];
-	obs_response_properties_callback* properties_callback;
-	obs_put_object_data_callback* toS3Callback;
-	int64_t toS3CallbackBytesRemaining;
-	obs_get_object_data_callback* fromS3Callback;
-	obs_response_complete_callback* complete_callback;
-	void* callback_data;
-	response_headers_handler responseHeadersHandler;
-	int propertiesCallbackMade;
-	error_parser errorParser;
-};
+    http_request_type httpRequestType;
 
+    obs_bucket_context bucketContext;
 
-class OSSRequest
+    obs_http_request_option request_option;
+
+    temp_auth_configure* temp_auth;
+
+    char* key;
+
+    char* queryParams;
+
+    char* subResource;
+
+    char* copySourceBucketName;
+
+    char* copySourceKey;
+
+    obs_get_conditions* get_conditions;
+
+    obs_cors_conf* corsConf;
+
+    obs_put_properties* put_properties;
+
+    server_side_encryption_params* encryption_params;
+
+    obs_response_properties_callback* properties_callback;
+
+    obs_put_object_data_callback* toObsCallback;
+
+    int64_t toObsCallbackTotalSize;
+
+    obs_get_object_data_callback* fromObsCallback;
+
+    obs_response_complete_callback* complete_callback;
+
+    void* callback_data;
+
+    int isCheckCA;
+
+    obs_storage_class_format storageClassFormat;
+
+    obs_use_api use_api;
+
+} request_params;
+
+typedef struct request_computed_values
 {
+    char* amzHeaders[OBS_MAX_METADATA_COUNT + 3];
 
-public:
-	static void set_use_api_switch(const obs_options* options, obs_use_api* use_api_temp);
+    int amzHeadersCount;
 
-	void request_perform(const request_params* params);
+    char amzHeadersRaw[30000 + COMPACTED_METADATA_BUFFER_SIZE + 256 + 1];
 
-	static void request_finish(http_request* request);
+    string_multibuffer(canonicalizedAmzHeaders,
+        COMPACTED_METADATA_BUFFER_SIZE + 30000 + 256 + 1);
 
-	static void request_release(http_request* request);
+    char urlEncodedKey[MAX_URLENCODED_KEY_SIZE + 1];
 
-	static obs_status get_api_version(char *bucket_name,char *host_name,obs_protocol protocol);
+    char urlEncodedSrcKey[MAX_URLENCODED_KEY_SIZE + 1];
 
-	// ======================== request_util start ==========
-	obs_status encode_key(const char* pSrc, char* pValue);
+    char canonicalizedResource[MAX_CANONICALIZED_RESOURCE_SIZE + 1];
 
-	// ======================== request_util end ==========
+    char cacheControlHeader[HEAD_NORMAL_LEN];
 
-	static void release_token();
+    char contentTypeHeader[HEAD_NORMAL_LEN];
 
-	static obs_status request_get(const request_params* params,
-		const request_computed_values* values,
-		http_request** reqReturn,
-		temp_auth_info* stTempAuthInfo);
+    char md5Header[HEAD_NORMAL_LEN];
 
+    char contentDispositionHeader[HEAD_NORMAL_LEN];
 
-PACKAGE_SCOPE:
+    char contentEncodingHeader[HEAD_NORMAL_LEN];
 
-	// Used to lock access to add/remove/find requests
-	static FCriticalSection RequestLock;
+    char websiteredirectlocationHeader[HEAD_WEBSITE_LEN];
 
+    char expiresHeader[HEAD_NORMAL_LEN];
 
-};
+    char ifModifiedSinceHeader[HEAD_NORMAL_LEN];
 
-*/
+    char ifUnmodifiedSinceHeader[HEAD_NORMAL_LEN];
+
+    char ifMatchHeader[HEAD_NORMAL_LEN];
+
+    char ifNoneMatchHeader[HEAD_NORMAL_LEN];
+
+    char rangeHeader[HEAD_NORMAL_LEN];
+
+    char authorizationHeader[HEAD_AUTH_LEN];
+
+    char tokenHeader[HEAD_AUTH_LEN];
+
+    char userAgent[HEAD_NORMAL_LEN];
+
+} request_computed_values;
+
+typedef struct __temp_auth_info
+{
+    char* tempAuthParams;
+    char* temp_auth_headers;
+}temp_auth_info;
+
+typedef struct obs_s3_switch
+{
+    time_t time_switch;
+    char bucket_name[BUCKET_LEN];
+    char host_name[DOMAIN_LEN];
+    obs_use_api use_api;
+} obs_s3_switch;
+
+void init_request_most_count(uint32_t online_request_max);
+
+obs_status request_api_initialize(unsigned int flags);
+
+obs_status request_curl_code_to_status(CURLcode code);
+
+void request_destroy();
+
+void request_finish(http_request* request);
+
+void request_api_deinitialize();
+
+void request_perform(const request_params* params);
+
+void set_use_api_switch(const obs_options* options, obs_use_api* use_api_temp);
+
+obs_use_api get_api_protocol(char* bucket_name, char* host_name);
+
+void request_finish_log(struct curl_slist* tmp, OBS_LOGLEVEL logLevel);
+
+#endif /* REQUEST_H */

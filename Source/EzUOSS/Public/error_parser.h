@@ -23,10 +23,10 @@
  *
  ************************************************************************** **/
 
- /*
-#pragma once
+#ifndef ERROR_PARSER_H
+#define ERROR_PARSER_H
 
-#include "OSSType.h"
+#include "OSSManger.h"
 // #include "simplexml.h"
 #include "string_buffer.h"
 
@@ -48,7 +48,7 @@ struct error_parser
     string_buffer(resource, 1024);
 
     string_buffer(further_details, 1024);
-    
+
     obs_name_value extra_details[EXTRA_DETAILS_SIZE];
 
     string_multibuffer(extraDetailsNamesValues, EXTRA_DETAILS_SIZE * 1024);
@@ -56,13 +56,15 @@ struct error_parser
 
 
 // Always call this
-void error_parser_initialize(error_parser *errorParser);
+void error_parser_initialize(error_parser* errorParser);
 
-obs_status error_parser_add(error_parser *errorParser, const char *buffer,
-                          int buffer_size);
+obs_status error_parser_add(error_parser* errorParser, const char* buffer,
+    int buffer_size);
 
-void error_parser_convert_status(error_parser *errorParser, obs_status *status);
+void error_parser_convert_status(error_parser* errorParser, obs_status* status);
 
 // Always call this
-void error_parser_deinitialize(error_parser *errorParser);
-*/
+void error_parser_deinitialize(error_parser* errorParser);
+
+
+#endif /* ERROR_PARSER_H */

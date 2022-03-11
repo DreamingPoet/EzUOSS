@@ -23,16 +23,30 @@
  *
  ************************************************************************** **/
 
-#pragma once
-
-#include <curl/curl.h>
-#include <curl/multi.h>
+#ifndef UTIL_H
+#define UTIL_H
 // #include <stdint.h>
 
-//#define vsnprintf_sec vsnprintf_s
-//#define snprintf_sec snprintf_s
-//#define sprintf_sec sprintf_s
-//#define strncpy_sec strncpy_s
+#include "OSSManger.h"
+
+// #if WITH_LIBCURL
+// #if PLATFORM_WINDOWS || PLATFORM_HOLOLENS
+// #include "Windows/WindowsHWrapper.h"
+// #include "Windows/AllowWindowsPlatformTypes.h"
+// #endif
+// #include <curl/curl.h>
+// #include <curl/multi.h>
+// #if PLATFORM_WINDOWS || PLATFORM_HOLOLENS
+// #include "Windows/HideWindowsPlatformTypes.h"
+// #endif
+// 
+// #endif //WITH_LIBCURL
+
+
+ //#define vsnprintf_sec vsnprintf_s
+ //#define snprintf_sec snprintf_s
+ //#define sprintf_sec sprintf_s
+ //#define strncpy_sec strncpy_s
 
 #define ACS_URL "http://acs.amazonaws.com/groups/"
 
@@ -41,24 +55,13 @@
 #define ACS_GROUP_LOG_DELIVERY  ACS_URL "s3/LogDelivery"
 #define MAX_XML_LEN (1024*100)
 
-//================ securectype start =============
-
-#define WCHAR_SIZE sizeof(wchar_t)
-
-// define the max length of the string
-#define SECUREC_STRING_MAX_LEN (0x7fffffffUL)
-#define SECUREC_WCHAR_STRING_MAX_LEN (SECUREC_STRING_MAX_LEN / WCHAR_SIZE)
-
-// add SECUREC_MEM_MAX_LEN for memcpy and memmove
-#define SECUREC_MEM_MAX_LEN (0x7fffffffUL)
-#define SECUREC_WCHAR_MEM_MAX_LEN (SECUREC_MEM_MAX_LEN / WCHAR_SIZE)
-//================ securectype end =============
-
-// _TRUNCATE 
+/* _TRUNCATE */
 #ifdef _TRUNCATE
-    #undef _TRUNCATE
+#undef _TRUNCATE
 #endif
-#define _TRUNCATE (SECUREC_STRING_MAX_LEN - 1) // TODO: securectype.h
+
+#define _TRUNCATE (SECUREC_STRING_MAX_LEN - 1)
+
 
 #ifdef _MSC_VER
 #define snprintf_s _snprintf_s
@@ -92,30 +95,25 @@ do{\
 
 #define obscase case
 
-enum xmlAddType
+typedef enum
 {
     ADD_HEAD_ONLY,
     ADD_TAIL_ONLY,
     ADD_NAME_CONTENT,
     INVALID_ADD_TYPE
-};
+}xmlAddType;
 
-enum eFormalizeChoice
+typedef enum
 {
-   NOT_NEED_FORMALIZE,
-   NEED_FORMALIZE   
-};
-
-int is_blank(char c)
-{
-	return ((c == ' ') || (c == '\t'));
-}
+    NOT_NEED_FORMALIZE,
+    NEED_FORMALIZE
+}eFormalizeChoice;
 
 
-/*
-int urlEncode(char *dest, const char *src, int maxSrcSize, char ignoreChar);
-    
-int urlDecode(char *dest, const char *src, int maxSrcSize);
+
+int urlEncode(char* dest, const char* src, int maxSrcSize, char ignoreChar);
+
+int urlDecode(char* dest, const char* src, int maxSrcSize);
 
 char* string_To_UTF8(const char* strSource);
 
@@ -125,33 +123,33 @@ int getTimeZone();
 
 void changeTimeFormat(const char* strInTime, char* strOutTime);
 
-int64 parseIso8601Time(const char *str);
+int64_t parseIso8601Time(const char* str);
 
-uint64 parseUnsignedInt(const char *str);
+uint64_t parseUnsignedInt(const char* str);
 
-int base64Encode(const unsigned char *in, int inLen, char *out);
+int base64Encode(const unsigned char* in, int inLen, char* out);
 
-char * base64Decode(const char *base64Char, const long base64CharSize, char *originChar, long originCharSize) ;
+char* base64Decode(const char* base64Char, const long base64CharSize, char* originChar, long originCharSize);
 
-void HMAC_SHA1(unsigned char hmac[20], const unsigned char *key, int key_len,
-                const unsigned char *message, int message_len);
+void HMAC_SHA1(unsigned char hmac[20], const unsigned char* key, int key_len,
+    const unsigned char* message, int message_len);
 
-void HMAC_SHA256(unsigned char hmac[32], const unsigned char *key, int key_len,
-                    const unsigned char *message, int message_len);
+void HMAC_SHA256(unsigned char hmac[32], const unsigned char* key, int key_len,
+    const unsigned char* message, int message_len);
 
-void SHA256Hash(unsigned char sha[32], const unsigned char *message, int message_len);
+void SHA256Hash(unsigned char sha[32], const unsigned char* message, int message_len);
 
-uint64 hash(const unsigned char *k, int length);
+uint64_t hash(const unsigned char* k, int length);
 
 int is_blank(char c);
 
-void ustr_to_hexes(unsigned char* szIn,unsigned int inlen, unsigned char* szOut);
+void ustr_to_hexes(unsigned char* szIn, unsigned int inlen, unsigned char* szOut);
 
-int pcre_replace(const char* src,char ** destOut);
-int add_xml_element(char * buffOut, int * lenth,const char * elementName, const char * content, 
-        eFormalizeChoice needFormalize, xmlAddType addType);
-int add_xml_element_in_bufflen(char * buffOut, int * lenth,const char * elementName, const char * content, 
-        eFormalizeChoice needFormalize, xmlAddType addType, int buff_len);
+int pcre_replace(const char* src, char** destOut);
+int add_xml_element(char* buffOut, int* lenth, const char* elementName, const char* content,
+    eFormalizeChoice needFormalize, xmlAddType addType);
+int add_xml_element_in_bufflen(char* buffOut, int* lenth, const char* elementName, const char* content,
+    eFormalizeChoice needFormalize, xmlAddType addType, int buff_len);
 
 
-*/
+#endif /* UTIL_H */
