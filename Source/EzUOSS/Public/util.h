@@ -63,10 +63,6 @@
 #define _TRUNCATE (SECUREC_STRING_MAX_LEN - 1)
 
 
-#ifdef _MSC_VER
-#define snprintf_s _snprintf_s
-#endif
-
 #define COMPACTED_METADATA_BUFFER_SIZE \
     (OBS_MAX_METADATA_COUNT * sizeof(OBS_METADATA_HEADER_NAME_PREFIX "n: v"))
 

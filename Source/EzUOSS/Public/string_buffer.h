@@ -19,6 +19,7 @@
 // #include "securec.h"
 // #include "log.h"
 
+// 在vs2013里不能运行，只能运行_sprintf)
 #ifdef _MSC_VER
 #define snprintf_s _snprintf_s
 #endif

@@ -26,13 +26,17 @@
 #include "request_util.h"
 #include "OSSManger.h"
 #if WITH_SSL
+
+#define UI UI_ST
+THIRD_PARTY_INCLUDES_START
 #include <openssl/ssl.h>
 // #include <openssl/hmac.h>
 // #include <openssl/evp.h>
 #include <openssl/bio.h>
 // #include <openssl/pem.h>
 #include <openssl/md5.h>
-
+THIRD_PARTY_INCLUDES_END
+#undef UI
 
 #include <ctype.h>
 #include <string.h>

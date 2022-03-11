@@ -451,11 +451,15 @@ uint64_t parseUnsignedInt(const char* str)
 
 #if WITH_SSL
 
+#define UI UI_ST
+THIRD_PARTY_INCLUDES_START
 #include <openssl/ssl.h>
 // #include <openssl/hmac.h>
 // #include <openssl/evp.h>
 #include <openssl/bio.h>
 // #include <openssl/pem.h>
+THIRD_PARTY_INCLUDES_END
+#undef UI
 
 int base64Encode(const unsigned char* in, int inLen, char* out)
 {

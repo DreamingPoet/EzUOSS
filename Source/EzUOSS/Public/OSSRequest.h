@@ -34,10 +34,8 @@
 // #include "common.h"
 
 
-#ifdef WIN32
 #define LIBOBS_VER_MAJOR "3.21"
 #define LIBOBS_VER_MINOR "8"
-#endif
 
 #if defined __GNUC__ || defined LINUX
 #endif

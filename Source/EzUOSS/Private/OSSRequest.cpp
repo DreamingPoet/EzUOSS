@@ -49,8 +49,8 @@
 #if PLATFORM_WINDOWS || PLATFORM_HOLOLENS
 #include "Windows/WindowsHWrapper.h"
 #include "Windows/AllowWindowsPlatformTypes.h"
-#endif
 #include <winnt.h>
+#endif
 #if PLATFORM_WINDOWS || PLATFORM_HOLOLENS
 #include "Windows/HideWindowsPlatformTypes.h"
 #endif
